@@ -13,11 +13,16 @@ treb7uchet"
     assert result == 12 + 38 + 15 + 77
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
+    input = "two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen"
     result = part2(input)
 
-    assert result
+    assert result == 281
   end
 end
