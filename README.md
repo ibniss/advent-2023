@@ -1,6 +1,8 @@
-# Advent of Code Elixir Starter
+# Advent of Code 2023 Solutions
 
-A batteries included starter pack for participating in [Advent of Code](https://www.adventofcode.com) using Elixir!
+Solutions to Advent of Code 2023 - solved in Elixir in order to learn the language.
+
+Repo template taken from https://github.com/mhanberg/advent-of-code-elixir-starter
 
 ## Usage
 
@@ -9,7 +11,7 @@ There are 25 modules, 25 tests, and 50 mix tasks.
 1. Fill in the tests with the example solutions.
 1. Write your implementation.
 1. Fill in the final problem inputs into the mix task and run `mix d01.p1`!
-    - Benchmark your solution by passing the `-b` flag, `mix d01.p1 -b`
+   - Benchmark your solution by passing the `-b` flag, `mix d01.p1 -b`
 
 ```elixir
 defmodule AdventOfCode.Day01 do
@@ -94,34 +96,3 @@ AdventOfCode.Input.get!(7)
 AdventOfCode.Input.delete!(7, 2019)
 # and the next time you `get!` it will download a fresh one -- use this sparingly!
 ```
-
-## Installation
-
-```bash
-# clone
-$ git clone git@github.com:mhanberg/advent-of-code-elixir-starter.git advent-of-code
-$ cd advent-of-code
-
-# Reinitialize your git repo
-$ rm -rf .git && rm -rf .github
-$ git init
-```
-### Get started coding with zero configuration
-
-#### Using Visual Studio Code
-
-1. [Install Docker Desktop](https://www.docker.com/products/docker-desktop)
-1. Open project directory in VS Code
-1. Press F1, and select `Remote-Containers: Reopen in Container...`
-1. Wait a few minutes as it pulls image down and builds Dev Conatiner Docker image (this should only need to happen once unless you modify the Dockerfile)
-    1. You can see progress of the build by clicking `Starting Dev Container (show log): Building image` that appears in bottom right corner
-    1. During the build process it will also automatically run `mix deps.get`
-1. Once complete VS Code will connect your running Dev Container and will feel like your doing local development
-1. If you would like to use a specific version of Elixir change the `VARIANT` version in `.devcontainer/devcontainer.json`
-1. If you would like more information about VS Code Dev Containers check out the [dev container documentation](https://code.visualstudio.com/docs/remote/create-dev-container/?WT.mc_id=AZ-MVP-5003399)
-
-#### Compatible with Github Codespaces
-1. If you dont have Github Codespaces beta access, sign up for the beta https://github.com/features/codespaces/signup
-1. On GitHub, navigate to the main page of the repository.
-1. Under the repository name, use the  Code drop-down menu, and select Open with Codespaces.
-1. If you already have a codespace for the branch, click  New codespace.
