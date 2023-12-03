@@ -91,7 +91,7 @@ defmodule AdventOfCode.Day02 do
       # Multiply the max of each color together to get the power of the set
       max_colors
       |> Map.values()
-      |> Enum.reduce(fn x, acc -> x * acc end)
+      |> Enum.reduce(1, &(&1 * &2))
     end)
     |> Enum.sum()
   end
