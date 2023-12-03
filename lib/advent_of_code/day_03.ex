@@ -14,6 +14,17 @@ defmodule AdventOfCode.Day03 do
     |> Enum.map(&elem(&1, 0))
   end
 
+  @spec get_numbers(String.t()) :: [number_entry]
+  defp get_numbers(line) do
+    @number_regex
+    |> Regex.scan(line, return: :index)
+    |> Enum.map(&List.first/1)
+    |> Enum.map(fn {start_index, len} ->
+      end_index = start_index + len - 1
+      {String.slice(line, start_index..end_index), {start_index, end_index}}
+    end)
+  end
+
   def part1(schematic) do
     schematic
     |> String.split("\n", trim: true)
@@ -24,17 +35,8 @@ defmodule AdventOfCode.Day03 do
       line1 = List.first(lines)
       line2 = List.last(lines, [])
 
-      IO.inspect(line1, label: "Line 1")
-
       # Find number entries in line1
-      number_entries =
-        @number_regex
-        |> Regex.scan(line1, return: :index)
-        |> Enum.map(&List.first/1)
-        |> Enum.map(fn {start_index, len} ->
-          end_index = start_index + len - 1
-          {{start_index, end_index}, String.slice(line1, start_index..end_index)}
-        end)
+      number_entries = get_numbers(line1)
 
       # Look for symbols in line1 and 2
       symbols_1 = get_symbols(line1)
@@ -42,7 +44,7 @@ defmodule AdventOfCode.Day03 do
 
       numbers_filtered =
         number_entries
-        |> Enum.filter(fn {{start_index, end_index}, _} ->
+        |> Enum.filter(fn {_, {start_index, end_index}} ->
           # Condition 1 - adjacent above
           adj_above =
             acc[:prev_symbols]
@@ -64,15 +66,8 @@ defmodule AdventOfCode.Day03 do
               symbol_idx >= start_index - 1 and symbol_idx <= end_index + 1
             end)
 
-          # # Log the conditions
-          # IO.inspect({start_index, end_index}, label: "Number Entry")
-          # IO.inspect(adj_above, label: "Adjacent Above")
-          # IO.inspect(adj_line, label: "Adjacent Line")
-          # IO.inspect(adj_below, label: "Adjacent Below")
-
           adj_above or adj_line or adj_below
         end)
-        |> IO.inspect(label: "Number Entries Filtered")
 
       %{
         prev_symbols: symbols_1,
@@ -80,12 +75,69 @@ defmodule AdventOfCode.Day03 do
       }
     end)
     |> Map.get(:numbers)
-    |> Enum.map(&elem(&1, 1))
+    |> Enum.map(&elem(&1, 0))
     |> Enum.map(&String.to_integer/1)
-    |> IO.inspect(label: "Numbers")
     |> Enum.sum()
   end
 
-  def part2(_args) do
+  def part2(schematic) do
+    schematic
+    |> String.split("\n", trim: true)
+    # Consider two rows at a time
+    |> Enum.chunk_every(2, 1)
+    # Keep track of previous line numbers
+    |> Enum.reduce(%{prev_numbers: [], sum: 0}, fn lines, acc ->
+      line1 = List.first(lines)
+      line2 = List.last(lines, [])
+
+      symbols = get_symbols(line1)
+
+      numbers_1 = get_numbers(line1)
+      numbers_2 = get_numbers(line2)
+
+      # compute map of symbol => adjacent numbers
+      symbol_sum =
+        symbols
+        |> Enum.map(fn symbol_idx ->
+          adjacent_above =
+            acc[:prev_numbers]
+            |> Enum.filter(fn {_, {start_index, end_index}} ->
+              symbol_idx >= start_index - 1 and symbol_idx <= end_index + 1
+            end)
+            |> Enum.map(&elem(&1, 0))
+
+          adjacent_next =
+            numbers_1
+            |> Enum.filter(fn {_, {start_index, end_index}} ->
+              symbol_idx == start_index - 1 or symbol_idx == end_index + 1
+            end)
+            |> Enum.map(&elem(&1, 0))
+
+          adjacent_below =
+            numbers_2
+            |> Enum.filter(fn {_, {start_index, end_index}} ->
+              symbol_idx >= start_index - 1 and symbol_idx <= end_index + 1
+            end)
+            |> Enum.map(&elem(&1, 0))
+
+          numbers_found = adjacent_above ++ adjacent_next ++ adjacent_below
+
+          # If at least two numbers found
+          if length(numbers_found) >= 2 do
+            numbers_found
+            |> Enum.map(&String.to_integer/1)
+            |> Enum.product()
+          else
+            0
+          end
+        end)
+        |> Enum.sum()
+
+      %{
+        prev_numbers: numbers_1,
+        sum: acc[:sum] + symbol_sum
+      }
+    end)
+    |> Map.get(:sum)
   end
 end
