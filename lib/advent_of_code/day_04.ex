@@ -21,16 +21,27 @@ defmodule AdventOfCode.Day04 do
       your_numbers
       |> Enum.reduce(0, fn number, acc ->
         if Enum.member?(winning_numbers, number) do
-          case acc do
-            0 -> 1
-            _ -> acc * 2
-          end
+          max(1, acc * 2)
         else
           acc
         end
       end)
     end)
     |> Enum.sum()
+  end
+
+  @spec update_count_map(map(), integer(), integer(), integer()) :: map()
+  defp update_count_map(acc, _index, numbers_won, _multiplier) when numbers_won <= 0 do
+    # No numbers won, no need to update the map
+    acc
+  end
+
+  defp update_count_map(acc, index, numbers_won, multiplier) do
+    # Update numbers_won scratchcards with multiplier
+    0..(numbers_won - 1)
+    |> Enum.reduce(acc, fn num_index, acc ->
+      Map.update(acc, index + num_index + 1, multiplier + 1, &(&1 + multiplier))
+    end)
   end
 
   def part2(input) do
@@ -48,19 +59,9 @@ defmodule AdventOfCode.Day04 do
 
       multiplier = Map.get(acc, index, 1)
 
-      if number_won <= 0 do
-        # Just update acc with current index
-        acc |> Map.update(index, 1, & &1)
-      else
-        # Increment acc indexes by 'multiplier' for each won scratchcard
-        Range.new(0, number_won - 1)
-        |> Enum.with_index()
-        |> Enum.reduce(acc, fn {_, num_index}, acc ->
-          Map.update(acc, index + num_index + 1, multiplier + 1, &(&1 + multiplier))
-        end)
-        #  make sure current index is set, default it to 1
-        |> Map.update(index, 1, & &1)
-      end
+      acc
+      |> update_count_map(index, number_won, multiplier)
+      |> Map.update(index, 1, & &1)
     end)
     |> Map.values()
     |> Enum.sum()
