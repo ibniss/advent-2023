@@ -84,7 +84,7 @@ defmodule AdventOfCode.Day03 do
     schematic
     |> String.split("\n", trim: true)
     # Consider two rows at a time
-    |> Enum.chunk_every(2, 1)
+    |> Stream.chunk_every(2, 1)
     # Keep track of previous line numbers
     |> Enum.reduce(%{prev_numbers: [], sum: 0}, fn lines, acc ->
       line1 = List.first(lines)
