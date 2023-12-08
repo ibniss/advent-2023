@@ -97,6 +97,7 @@ defmodule AdventOfCode.Day05 do
       |> Enum.map(&String.to_integer/1)
       |> Enum.chunk_every(2, 2)
       |> Enum.map(fn [start, length] -> Range.new(start, start + length - 1) end)
+      |> IO.inspect(label: "seed_ranges")
 
     reverse_range_maps =
       maps
@@ -155,19 +156,5 @@ defmodule AdventOfCode.Day05 do
     |> Enum.filter(&(&1 != nil))
     |> List.first()
     |> elem(0)
-
-    # |> Stream.drop_while(fn loc ->
-    #   mapped = maps_lookup(reverse_range_maps, loc)
-
-    #   # Every 100k locations print % progress
-    #   if rem(loc, 100_000) == 0 do
-    #     IO.inspect(loc, label: "loc")
-    #     IO.inspect("% #{loc / max_loc * 100}", label: "progress")
-    #   end
-
-    #   Enum.all?(seed_ranges, fn seed_range ->
-    #     mapped not in seed_range
-    #   end)
-    # end)
   end
 end
