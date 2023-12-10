@@ -165,7 +165,6 @@ defmodule AdventOfCode.Day07 do
     |> String.split("\n", trim: true)
     |> Enum.map(&String.split(&1, " ", trim: true))
     |> Enum.map(fn [hand, bid] ->
-      IO.inspect(hand, label: "hand")
       hand_as_num = hand_to_numbers_joker(hand)
 
       %{
@@ -175,7 +174,6 @@ defmodule AdventOfCode.Day07 do
         strength: compute_hand_strength_joker(hand_as_num)
       }
     end)
-    |> IO.inspect(label: "hand strengths")
     |> Enum.sort(fn hand1, hand2 ->
       if hand1.strength == hand2.strength do
         # compare cards one by one until one is greater
@@ -192,7 +190,6 @@ defmodule AdventOfCode.Day07 do
         hand1.strength < hand2.strength
       end
     end)
-    |> IO.inspect(label: "sorted hand strengths")
     # multiply each bid by max..1 depending on position
     |> Enum.with_index()
     |> Enum.map(fn {hand, index} ->
